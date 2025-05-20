@@ -1,3 +1,4 @@
+using AirportManager.API.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AirportManager.API.Controllers;
@@ -7,19 +8,22 @@ namespace AirportManager.API.Controllers;
 public class CountriesController : ControllerBase
 {
     [HttpGet]
-    public JsonResult GetCountries()
+    public ActionResult<IEnumerable<CountryDto>> GetCountries()
     {
-        var countries = DummyDataProvider.Countries.GetCountries();
+        var countries = DummyDataProvider.GetCountries();
 
-        return new JsonResult(countries);
+        return Ok(countries);
     }
 
     [HttpGet("{id}")]
-    public JsonResult GetCountry(int id)
+    public ActionResult<CountryDto> GetCountry(int id)
     {
-        var allCountries = DummyDataProvider.Countries.GetCountries();
+        var allCountries = DummyDataProvider.GetCountries();
         var country = allCountries.Find(country => country.Id == id);
 
-        return new JsonResult(country);
+        if (country == null)
+            return NotFound();
+
+        return Ok(country);
     }
 }
