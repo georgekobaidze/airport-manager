@@ -4,14 +4,32 @@ namespace AirportManager.API;
 
 public static class DummyDataProvider
 {
-    public static List<CountryDto> GetCountries() => new()
+    public static List<CountryDto> GetCountries() => _countries;
+
+    public static List<AirportDto> GetAirports() => _airports;
+
+    public static bool CreateAirport(CreateAirportDto airport)
     {
-        new CountryDto { Id = 1, Name = "United States", NumberOfAirports = 13500 },
+        var maxId = _airports.Max(x => x.Id);
+
+        _airports.Add(new AirportDto
+        {
+            Id = maxId,
+            CountryId = airport.CountryId,
+            Name = airport.Name
+        });
+
+        return true;
+    }
+
+    private static List<CountryDto> _countries = new()
+    {
         new CountryDto { Id = 2, Name = "United Kingdom", NumberOfAirports = 471 },
+        new CountryDto { Id = 1, Name = "United States", NumberOfAirports = 13500 },
         new CountryDto { Id = 3, Name = "Australia", NumberOfAirports = 600 }
     };
 
-    public static List<AirportDto> GetAirports() => new()
+    private static List<AirportDto> _airports = new()
     {
         new AirportDto { Id = 1, Name = "Hartsfield–Jackson Atlanta International Airport", CountryId = 1 },
         new AirportDto { Id = 2, Name = "Los Angeles International Airport", CountryId = 1 },
