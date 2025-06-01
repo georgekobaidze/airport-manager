@@ -8,18 +8,23 @@ public static class DummyDataProvider
 
     public static List<AirportDto> GetAirports() => _airports;
 
-    public static bool CreateAirport(CreateAirportDto airport)
+    public static int CreateAirport(CreateAirportDto airport)
     {
         var maxId = _airports.Max(x => x.Id);
 
         _airports.Add(new AirportDto
         {
-            Id = maxId,
+            Id = maxId + 1,
             CountryId = airport.CountryId,
             Name = airport.Name
         });
 
-        return true;
+        return maxId;
+    }
+
+    public static AirportDto? GetAirport(int id)
+    {
+        return _airports.FirstOrDefault(x => x.Id == id);
     }
 
     private static List<CountryDto> _countries = new()

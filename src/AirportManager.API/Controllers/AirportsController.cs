@@ -15,12 +15,31 @@ public class AirportsController : ControllerBase
         return Ok(airports);
     }
 
+    [HttpGet("{id}", Name = "GetAirport")]
+    public ActionResult<AirportDto> GetAirport(int id)
+    {
+        var airport = DummyDataProvider.GetAirport(id);
+
+        if (airport == null)
+            return NotFound();
+
+        return Ok(airport);
+    }
+
     [HttpPost]
     public ActionResult CreateAirport(CreateAirportDto createAirportDto)
     {
-        var result = DummyDataProvider.CreateAirport(createAirportDto);
-        if (result)
-            return Ok();
+        var airportId = DummyDataProvider.CreateAirport(createAirportDto);
+        if (airportId != -1)
+            return CreatedAtRoute(
+                "GetAirport",
+                new { id = airportId },
+                new AirportDto
+                {
+                    Id = airportId,
+                    CountryId = createAirportDto.CountryId,
+                    Name = createAirportDto.Name
+                });
 
         return StatusCode(StatusCodes.Status500InternalServerError);
     }
