@@ -1,4 +1,5 @@
 using AirportManager.API.DTOs;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AirportManager.API.Controllers;
@@ -42,5 +43,45 @@ public class AirportsController : ControllerBase
                 });
 
         return StatusCode(StatusCodes.Status500InternalServerError);
+    }
+
+    [HttpPut("{id}")]
+    public ActionResult UpdateAirport(int id, UpdateAirportDto updateAirportDto)
+    {
+        var airportToUpdate = DummyDataProvider.GetAirports().FirstOrDefault(x => x.Id == id);
+        if (airportToUpdate == null)
+            return NotFound();
+
+        airportToUpdate.Name = updateAirportDto.Name;
+        airportToUpdate.CountryId = updateAirportDto.CountryId;
+
+        return NoContent();
+    }
+
+    [HttpPatch("{id}")]
+    public IActionResult PartiallyUpdateAirport(int id, JsonPatchDocument<UpdateAirportDto> jsonPatchDocument)
+    {
+        var airportFromStore = DummyDataProvider.GetAirports().FirstOrDefault(x => x.Id == id);
+        if (airportFromStore == null)
+            return NotFound();
+
+        var airportToPatch = new UpdateAirportDto
+        {
+            Name = airportFromStore.Name,
+            CountryId = airportFromStore.CountryId
+        };
+
+        jsonPatchDocument.ApplyTo(airportToPatch, ModelState);
+
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        if (!TryValidateModel(airportToPatch))
+            return BadRequest(ModelState);
+
+        airportFromStore.CountryId = airportToPatch.CountryId;
+        airportFromStore.Name = airportToPatch.Name;
+
+        return NoContent();
     }
 }

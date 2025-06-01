@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 
-public class UpdateCountryDto
+public class UpdateAirportDto
 {
     [Required]
     public string Name { get; set; }
-    
-    public int NumberOfAirports { get; set; }
+
+    public int CountryId { get; set; }
 }
