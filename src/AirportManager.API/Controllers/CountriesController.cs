@@ -15,7 +15,7 @@ public class CountriesController : ControllerBase
         return Ok(countries);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id}", Name = "GetCountry")]
     public ActionResult<CountryDto> GetCountry(int id)
     {
         var allCountries = DummyDataProvider.GetCountries();
@@ -25,5 +25,25 @@ public class CountriesController : ControllerBase
             return NotFound();
 
         return Ok(country);
+    }
+
+    [HttpPost]
+    public ActionResult CreateCountry(CreateCountryDto country)
+    {
+        var test = ModelState;
+        var countryId = DummyDataProvider.CreateCountry(country);
+
+        if (countryId != -1)
+            return CreatedAtRoute(
+                "GetCountry",
+                new { id = countryId },
+                new CountryDto
+                {
+                    Id = countryId,
+                    Name = country.Name,
+                    NumberOfAirports = country.NumberOfAirports
+                });
+
+        return StatusCode(StatusCodes.Status500InternalServerError);       
     }
 }

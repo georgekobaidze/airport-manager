@@ -22,10 +22,25 @@ public static class DummyDataProvider
         return maxId;
     }
 
+    internal static int CreateCountry(CreateCountryDto country)
+    {
+        var maxId = _countries.Max(x => x.Id);
+
+        _countries.Add(new CountryDto
+        {
+            Id = maxId + 1,
+            Name = country.Name,
+            NumberOfAirports = country.NumberOfAirports
+        });
+
+        return maxId;
+    }
+
     public static AirportDto? GetAirport(int id)
     {
         return _airports.FirstOrDefault(x => x.Id == id);
     }
+
 
     private static List<CountryDto> _countries = new()
     {
