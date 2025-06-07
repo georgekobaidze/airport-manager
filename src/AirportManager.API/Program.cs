@@ -1,3 +1,6 @@
+using AirportManager.API.DbContexts;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -7,6 +10,9 @@ builder.Services.AddControllers().AddNewtonsoftJson();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<AirportManagerDbContext>(
+    options => options.UseSqlite("Data Source=AirportManager.db"));
 
 var app = builder.Build();
 

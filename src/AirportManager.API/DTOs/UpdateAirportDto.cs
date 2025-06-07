@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
+namespace AirportManager.API.DTOs;
+
 public class UpdateAirportDto
 {
     [Required]
