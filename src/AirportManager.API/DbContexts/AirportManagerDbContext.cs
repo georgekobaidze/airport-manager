@@ -8,7 +8,6 @@ public class AirportManagerDbContext : DbContext
     public AirportManagerDbContext(DbContextOptions<AirportManagerDbContext> options)
         : base(options)
     {
-        
     }
 
     public DbSet<Country> Countries { get; set; }

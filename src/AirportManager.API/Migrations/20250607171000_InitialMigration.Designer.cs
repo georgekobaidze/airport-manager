@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AirportManager.API.Migrations
 {
     [DbContext(typeof(AirportManagerDbContext))]
-    [Migration("20250607145428_InitialMigration")]
+    [Migration("20250607171000_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -29,7 +29,6 @@ namespace AirportManager.API.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("TEXT");
 

@@ -14,7 +14,7 @@ public class Airport
     public string Name { get; set; }
 
     [MaxLength(500)]
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
     public int? CountryId { get; set; }
     public Country? Country { get; set; }

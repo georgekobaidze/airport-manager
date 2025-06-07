@@ -1,4 +1,5 @@
 using AirportManager.API.DbContexts;
+using AirportManager.API.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,5 +31,7 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.SeedDatabase();
 
 app.Run();
