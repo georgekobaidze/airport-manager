@@ -13,7 +13,7 @@ builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<AirportManagerDbContext>(
-    options => options.UseSqlite("Data Source=AirportManager.db"));
+    options => options.UseSqlite(builder.Configuration["AirportManagerDbConnectionString"]));
 
 var app = builder.Build();
 
