@@ -1,4 +1,5 @@
 using AirportManager.API.DTOs;
+using AirportManager.API.Services.Interfaces;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,18 +9,26 @@ namespace AirportManager.API.Controllers;
 [Route("api/airports")]
 public class AirportsController : ControllerBase
 {
-    [HttpGet]
-    public ActionResult<ICollection<AirportDto>> GetAirports()
+    private readonly IAirportService _airportService;
+
+    public AirportsController(IAirportService airportService)
     {
-        var airports = DummyDataProvider.GetAirports();
+        _airportService = airportService;
+    }
+
+
+    [HttpGet]
+    public async Task<ActionResult<ICollection<AirportDto>>> GetAirports()
+    {
+        var airports = await _airportService.GetAllAsync();
 
         return Ok(airports);
     }
 
     [HttpGet("{id}", Name = "GetAirport")]
-    public ActionResult<AirportDto> GetAirport(int id)
+    public async Task<ActionResult<AirportDto>> GetAirport(int id)
     {
-        var airport = DummyDataProvider.GetAirport(id);
+        var airport = await _airportService.GetByIdAsync(id);
 
         if (airport == null)
             return NotFound();
@@ -28,9 +37,9 @@ public class AirportsController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult CreateAirport(CreateAirportDto createAirportDto)
+    public async Task<ActionResult> CreateAirport(CreateAirportDto createAirportDto)
     {
-        var airportId = DummyDataProvider.CreateAirport(createAirportDto);
+        var airportId = await _airportService.CreateAsync(createAirportDto);
         if (airportId != -1)
             return CreatedAtRoute(
                 "GetAirport",
@@ -46,42 +55,37 @@ public class AirportsController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public ActionResult UpdateAirport(int id, UpdateAirportDto updateAirportDto)
+    public async Task<ActionResult> UpdateAirport(int id, UpdateAirportDto updateAirportDto)
     {
-        var airportToUpdate = DummyDataProvider.GetAirports().FirstOrDefault(x => x.Id == id);
-        if (airportToUpdate == null)
-            return NotFound();
-
-        airportToUpdate.Name = updateAirportDto.Name;
-        airportToUpdate.CountryId = updateAirportDto.CountryId;
+        await _airportService.UpdateAsync(id, updateAirportDto);
 
         return NoContent();
     }
 
-    [HttpPatch("{id}")]
-    public IActionResult PartiallyUpdateAirport(int id, JsonPatchDocument<UpdateAirportDto> jsonPatchDocument)
-    {
-        var airportFromStore = DummyDataProvider.GetAirports().FirstOrDefault(x => x.Id == id);
-        if (airportFromStore == null)
-            return NotFound();
+    // [HttpPatch("{id}")]
+    // public IActionResult PartiallyUpdateAirport(int id, JsonPatchDocument<UpdateAirportDto> jsonPatchDocument)
+    // {
+    //     var airportFromStore = DummyDataProvider.GetAirports().FirstOrDefault(x => x.Id == id);
+    //     if (airportFromStore == null)
+    //         return NotFound();
 
-        var airportToPatch = new UpdateAirportDto
-        {
-            Name = airportFromStore.Name,
-            CountryId = airportFromStore.CountryId
-        };
+    //     var airportToPatch = new UpdateAirportDto
+    //     {
+    //         Name = airportFromStore.Name,
+    //         CountryId = airportFromStore.CountryId
+    //     };
 
-        jsonPatchDocument.ApplyTo(airportToPatch, ModelState);
+    //     jsonPatchDocument.ApplyTo(airportToPatch, ModelState);
 
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
+    //     if (!ModelState.IsValid)
+    //         return BadRequest(ModelState);
 
-        if (!TryValidateModel(airportToPatch))
-            return BadRequest(ModelState);
+    //     if (!TryValidateModel(airportToPatch))
+    //         return BadRequest(ModelState);
 
-        airportFromStore.CountryId = airportToPatch.CountryId;
-        airportFromStore.Name = airportToPatch.Name;
+    //     airportFromStore.CountryId = airportToPatch.CountryId;
+    //     airportFromStore.Name = airportToPatch.Name;
 
-        return NoContent();
-    }
+    //     return NoContent();
+    // }
 }

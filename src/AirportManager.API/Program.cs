@@ -1,5 +1,9 @@
 using AirportManager.API.DbContexts;
 using AirportManager.API.Extensions;
+using AirportManager.API.Repositories.Implementations;
+using AirportManager.API.Repositories.Interfaces;
+using AirportManager.API.Services.Implementations;
+using AirportManager.API.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +18,12 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<AirportManagerDbContext>(
     options => options.UseSqlite(builder.Configuration["AirportManagerDbConnectionString"]));
+
+builder.Services.AddScoped<ICountryRepository, CountryRepository>();
+builder.Services.AddScoped<IAirportRepository, AirportRepository>();
+
+builder.Services.AddScoped<ICountryService, CountryService>();
+builder.Services.AddScoped<IAirportService, AirportService>();
 
 var app = builder.Build();
 
