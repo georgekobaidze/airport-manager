@@ -1,3 +1,5 @@
+using AirportManager.API.DbConnectionFactory.Implementations;
+using AirportManager.API.DbConnectionFactory.Interfaces;
 using AirportManager.API.DbContexts;
 using AirportManager.API.Extensions;
 using AirportManager.API.Repositories.Implementations;
@@ -18,6 +20,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<AirportManagerDbContext>(
     options => options.UseSqlite(builder.Configuration["AirportManagerDbConnectionString"]));
+
+builder.Services.AddSingleton<IDbConnectionFactory, DbConnectionFactory>();
 
 builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 builder.Services.AddScoped<IAirportRepository, AirportRepository>();
