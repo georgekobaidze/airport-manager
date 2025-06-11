@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace AirportManager.API.Entities.EntityConfigurations;
 
-public class CountryConfigurations : IEntityTypeConfiguration<Country>
+public class CountryConfiguration : IEntityTypeConfiguration<Country>
 {
     public void Configure(EntityTypeBuilder<Country> builder)
     {

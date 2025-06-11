@@ -19,7 +19,7 @@ builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<AirportManagerDbContext>(
-    options => options.UseSqlite(builder.Configuration["AirportManagerDbConnectionString"]));
+    options => options.UseSqlite("Data Source=airport_manager.db"));
 
 builder.Services.AddSingleton<IDbConnectionFactory, DbConnectionFactory>();
 
