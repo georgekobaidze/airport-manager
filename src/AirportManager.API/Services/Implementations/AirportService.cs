@@ -1,6 +1,7 @@
 using AirportManager.API.DTOs;
 using AirportManager.API.Entities;
 using AirportManager.API.Services.Interfaces;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace AirportManager.API.Services.Implementations;
 
@@ -17,6 +18,11 @@ public class AirportService : IAirportService
     }
 
     public Task<AirportDto> GetByIdAsync(int id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task PartiallyUpdateAsync(int id, JsonPatchDocument<UpdateAirportDto> jsonPatchDocument)
     {
         throw new NotImplementedException();
     }

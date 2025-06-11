@@ -64,30 +64,33 @@ public class CountriesController : ControllerBase
         return NoContent();
     }
 
-    //[HttpPatch("{id}")]
-    // public IActionResult PartiallyUpdateCountry(int id, JsonPatchDocument<UpdateCountryDto> jsonPatchDocument)
-    // {
-    //     var countryFromStore = DummyDataProvider.GetCountries().FirstOrDefault(x => x.Id == id);
-    //     if (countryFromStore == null)
-    //         return NotFound();
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> PartiallyUpdateCountry(int id, JsonPatchDocument<UpdateCountryDto> jsonPatchDocument)
+    {
+        // var countryFromStore = DummyDataProvider.GetCountries().FirstOrDefault(x => x.Id == id);
+        // if (countryFromStore == null)
+        //     return NotFound();
 
-    //     var countryToPatch = new UpdateCountryDto
-    //     {
-    //         Name = countryFromStore.Name,
-    //         NumberOfAirports = countryFromStore.NumberOfAirports
-    //     };
+        // var countryToPatch = new UpdateCountryDto
+        // {
+        //     Name = countryFromStore.Name,
+        //     NumberOfAirports = countryFromStore.NumberOfAirports
+        // };
 
-    //     jsonPatchDocument.ApplyTo(countryToPatch, ModelState);
+        // jsonPatchDocument.ApplyTo(countryToPatch, ModelState);
 
-    //     if (!ModelState.IsValid)
-    //         return BadRequest(ModelState);
+        // if (!ModelState.IsValid)
+        //     return BadRequest(ModelState);
 
-    //     if (!TryValidateModel(countryToPatch))
-    //         return BadRequest(ModelState);
+        // if (!TryValidateModel(countryToPatch))
+        //     return BadRequest(ModelState);
 
-    //     countryFromStore.Name = countryToPatch.Name;
-    //     countryFromStore.NumberOfAirports = countryToPatch.NumberOfAirports;
+        // countryFromStore.Name = countryToPatch.Name;
+        // countryFromStore.NumberOfAirports = countryToPatch.NumberOfAirports;
 
-    //     return NoContent();
-    // }
+        // return NoContent();
+
+        await _countryService.PartiallyUpdateAsync(id, jsonPatchDocument);
+        return NoContent();
+    }
 }

@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using AirportManager.API.DTOs;
 using AirportManager.API.Services.Interfaces;
 using Microsoft.AspNetCore.JsonPatch;
@@ -62,30 +63,34 @@ public class AirportsController : ControllerBase
         return NoContent();
     }
 
-    // [HttpPatch("{id}")]
-    // public IActionResult PartiallyUpdateAirport(int id, JsonPatchDocument<UpdateAirportDto> jsonPatchDocument)
-    // {
-    //     var airportFromStore = DummyDataProvider.GetAirports().FirstOrDefault(x => x.Id == id);
-    //     if (airportFromStore == null)
-    //         return NotFound();
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> PartiallyUpdateAirport(int id, JsonPatchDocument<UpdateAirportDto> jsonPatchDocument)
+    {
+        // var airportFromStore = DummyDataProvider.GetAirports().FirstOrDefault(x => x.Id == id);
+        // if (airportFromStore == null)
+        //     return NotFound();
 
-    //     var airportToPatch = new UpdateAirportDto
-    //     {
-    //         Name = airportFromStore.Name,
-    //         CountryId = airportFromStore.CountryId
-    //     };
+        // var airportToPatch = new UpdateAirportDto
+        // {
+        //     Name = airportFromStore.Name,
+        //     CountryId = airportFromStore.CountryId
+        // };
 
-    //     jsonPatchDocument.ApplyTo(airportToPatch, ModelState);
+        // jsonPatchDocument.ApplyTo(airportToPatch, ModelState);
 
-    //     if (!ModelState.IsValid)
-    //         return BadRequest(ModelState);
+        // if (!ModelState.IsValid)
+        //     return BadRequest(ModelState);
 
-    //     if (!TryValidateModel(airportToPatch))
-    //         return BadRequest(ModelState);
+        // if (!TryValidateModel(airportToPatch))
+        //     return BadRequest(ModelState);
 
-    //     airportFromStore.CountryId = airportToPatch.CountryId;
-    //     airportFromStore.Name = airportToPatch.Name;
+        // airportFromStore.CountryId = airportToPatch.CountryId;
+        // airportFromStore.Name = airportToPatch.Name;
 
-    //     return NoContent();
-    // }
+        // return NoContent();
+
+        await _airportService.PartiallyUpdateAsync(id, jsonPatchDocument);
+
+        return NoContent();
+    }
 }
