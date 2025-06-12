@@ -1,24 +1,36 @@
 using AirportManager.API.DbConnectionFactory.Interfaces;
+using AirportManager.API.Helpers;
 using AirportManager.API.Repositories.Interfaces;
+using Dapper;
 
 namespace AirportManager.API.Repositories.Implementations;
 
 public abstract class GenericRepository<T> : IGenericRepository<T> where T : class
 {
-    private readonly IDbConnectionFactory _dbConnection;
+    private readonly IDbConnectionFactory _factory;
+    private readonly string _tableName = typeof(T).Name.PascalCaseToSnakeCase().Pluralize();
 
-    public GenericRepository(IDbConnectionFactory dbConnection)
+    public GenericRepository(IDbConnectionFactory factory)
     {
-        _dbConnection = dbConnection;
+        _factory = factory;
     }
 
-    public Task<T> GetByIdAsync(int id)
+    public async Task<T> GetByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        var query = $"SELECT * FROM {_tableName} WHERE id = @id LIMIT 1";
+
+        var connection = _factory.CreateConnection();
+
+        return await connection.QueryFirstOrDefaultAsync<T>(query, id);
+
     }
-    public Task<IEnumerable<T>> GetAllAsync()
+    public async Task<IEnumerable<T>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        var query = $"SELECT * FROM {_tableName}";
+
+        var connection = _factory.CreateConnection();
+
+        return await connection.QueryAsync<T>(query);
     }
     public Task CreateAsync(T entity)
     {
