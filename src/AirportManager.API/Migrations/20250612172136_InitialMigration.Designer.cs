@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AirportManager.API.Migrations
 {
     [DbContext(typeof(AirportManagerDbContext))]
-    [Migration("20250611191351_InitialMigration")]
+    [Migration("20250612172136_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
