@@ -15,6 +15,15 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : cla
         _factory = factory;
     }
 
+    public async Task<IEnumerable<T>> GetAllAsync()
+    {
+        var query = $"SELECT * FROM {_tableName}";
+
+        var connection = _factory.CreateConnection();
+
+        return await connection.QueryAsync<T>(query);
+    }
+
     public async Task<T> GetByIdAsync(int id)
     {
         var query = $"SELECT * FROM {_tableName} WHERE id = @id LIMIT 1";
@@ -24,18 +33,12 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : cla
         return await connection.QueryFirstOrDefaultAsync<T>(query, id);
 
     }
-    public async Task<IEnumerable<T>> GetAllAsync()
-    {
-        var query = $"SELECT * FROM {_tableName}";
 
-        var connection = _factory.CreateConnection();
-
-        return await connection.QueryAsync<T>(query);
-    }
     public Task CreateAsync(T entity)
     {
         throw new NotImplementedException();
     }
+
     public Task UpdateAsync(T entity)
     {
         throw new NotImplementedException();
