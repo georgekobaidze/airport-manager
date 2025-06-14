@@ -1,5 +1,4 @@
 using AirportManager.API.DTOs;
-using AirportManager.API.Entities;
 using AirportManager.API.Repositories.Interfaces;
 using AirportManager.API.Services.Interfaces;
 using AirportManager.API.Shared;

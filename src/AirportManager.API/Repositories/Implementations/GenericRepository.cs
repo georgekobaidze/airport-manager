@@ -13,6 +13,7 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : cla
     public GenericRepository(IDbConnectionFactory factory)
     {
         _factory = factory;
+        DefaultTypeMap.MatchNamesWithUnderscores = true;
     }
 
     public async Task<IEnumerable<T>> GetAllAsync()
