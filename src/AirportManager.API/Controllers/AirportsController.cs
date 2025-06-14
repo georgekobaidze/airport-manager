@@ -29,12 +29,12 @@ public class AirportsController : ControllerBase
     [HttpGet("{id}", Name = "GetAirport")]
     public async Task<ActionResult<AirportDto>> GetAirport(int id)
     {
-        var airport = await _airportService.GetByIdAsync(id);
+        var airportResult = await _airportService.GetByIdAsync(id);
 
-        if (airport == null)
-            return NotFound();
+        if (!airportResult.Success)
+            return StatusCode(airportResult.StatusCode, airportResult.Message);
 
-        return Ok(airport);
+        return Ok(airportResult.Data);
     }
 
     [HttpPost]

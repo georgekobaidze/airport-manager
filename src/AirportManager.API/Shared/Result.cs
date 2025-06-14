@@ -32,6 +32,7 @@ public class Result<T>
         return new Result<T>
         {
             Success = false,
+            StatusCode = StatusCodes.Status404NotFound,
             Message = "Resource not found"
         };
     }
