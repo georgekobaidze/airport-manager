@@ -2,6 +2,7 @@ using AirportManager.API.DTOs;
 using AirportManager.API.Entities;
 using AirportManager.API.Repositories.Interfaces;
 using AirportManager.API.Services.Interfaces;
+using AirportManager.API.Shared;
 using Microsoft.AspNetCore.JsonPatch;
 
 namespace AirportManager.API.Services.Implementations;
@@ -15,16 +16,18 @@ public class AirportService : IAirportService
         _airportRepository = airportRepository;
     }
 
-    public async Task<IEnumerable<AirportDto>> GetAllAsync()
+    public async Task<Result<IEnumerable<AirportDto>>> GetAllAsync()
     {
-        var airports = await _airportRepository.GetAllAsync();
+        var airportsFromDb = await _airportRepository.GetAllAsync();
 
-        return airports.Select(airport => new AirportDto
+        var airports = airportsFromDb.Select(airport => new AirportDto
         {
             Id = airport.Id,
             Name = airport.Name,
             CountryId = airport.CountryId
         });
+
+        return Result<IEnumerable<AirportDto>>.Ok(airports);
     }
 
     public async Task<AirportDto> GetByIdAsync(int id)

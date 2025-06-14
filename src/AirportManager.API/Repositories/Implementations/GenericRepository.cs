@@ -31,7 +31,6 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : cla
         var connection = _factory.CreateConnection();
 
         return await connection.QueryFirstOrDefaultAsync<T>(query, id);
-
     }
 
     public Task CreateAsync(T entity)
