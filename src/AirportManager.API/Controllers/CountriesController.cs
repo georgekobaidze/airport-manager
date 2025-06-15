@@ -1,7 +1,5 @@
-using System.Threading.Tasks;
 using AirportManager.API.DTOs;
 using AirportManager.API.Services.Interfaces;
-using Humanizer;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
