@@ -47,9 +47,21 @@ public class AirportService : IAirportService
         return Result<AirportDto>.Ok(airport);
     }
 
-    public Task<int> CreateAsync(CreateAirportDto createAirportDto)
+    public async Task<Result<int>> CreateAsync(CreateAirportDto createAirportDto)
     {
-        throw new NotImplementedException();
+        var airportEntity = new Airport
+        {
+            Name = createAirportDto.Name,
+            CountryId = createAirportDto.CountryId,
+            Description = createAirportDto.Description
+        };
+
+        var airportId = await _airportRepository.CreateAsync(airportEntity);
+
+        if (airportId < 1)
+            return Result<int>.Fail("Resource couldn't be created.");
+
+        return Result<int>.Ok(airportId);
     }
 
 

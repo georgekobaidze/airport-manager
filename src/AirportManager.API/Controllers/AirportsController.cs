@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using AirportManager.API.DTOs;
 using AirportManager.API.Services.Interfaces;
 using Microsoft.AspNetCore.JsonPatch;
@@ -40,8 +39,11 @@ public class AirportsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult> CreateAirport(CreateAirportDto createAirportDto)
     {
-        var airportId = await _airportService.CreateAsync(createAirportDto);
-        if (airportId != -1)
+        var insertionResult = await _airportService.CreateAsync(createAirportDto);
+        if (insertionResult.Success)
+        {
+            var airportId = insertionResult.Data;
+
             return CreatedAtRoute(
                 "GetAirport",
                 new { id = airportId },
@@ -51,6 +53,7 @@ public class AirportsController : ControllerBase
                     CountryId = createAirportDto.CountryId,
                     Name = createAirportDto.Name
                 });
+        }
 
         return StatusCode(StatusCodes.Status500InternalServerError);
     }

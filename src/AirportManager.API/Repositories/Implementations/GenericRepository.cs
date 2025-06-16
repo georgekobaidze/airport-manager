@@ -34,7 +34,7 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : cla
         return await connection.QueryFirstOrDefaultAsync<T>(query, new { id });
     }
 
-    public Task CreateAsync(T entity)
+    public Task<int> CreateAsync(T entity)
     {
         throw new NotImplementedException();
     }
