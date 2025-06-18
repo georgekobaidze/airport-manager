@@ -55,7 +55,7 @@ public class AirportsController : ControllerBase
                 });
         }
 
-        return StatusCode(StatusCodes.Status500InternalServerError);
+        return StatusCode(StatusCodes.Status500InternalServerError, insertionResult.Message);
     }
 
     [HttpPut("{id}")]
