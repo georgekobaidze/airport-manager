@@ -7,5 +7,5 @@ public class Airport
     public string? Description { get; set; }
     public int? CountryId { get; set; }
 
-    public Country? Country { get; set; }
+    public virtual Country? Country { get; set; }
 }
