@@ -1,3 +1,4 @@
+using System.Net;
 using AirportManager.API.DTOs;
 using AirportManager.API.Entities;
 using AirportManager.API.Repositories.Interfaces;
@@ -64,6 +65,22 @@ public class AirportService : IAirportService
         return Result<int>.Ok(airportId);
     }
 
+    public async Task<Result> UpdateAsync(int id, UpdateAirportDto updateAirportDto)
+    {
+        var airportEntity = new Airport
+        {
+            Id = id,
+            CountryId = updateAirportDto.CountryId,
+            Name = updateAirportDto.Name,
+            Description = updateAirportDto.Description
+        };
+
+        var updateResult = await _airportRepository.UpdateAsync(airportEntity);
+        if (updateResult < 1)
+            return Result.FailNotFound();
+
+        return Result.Ok().WithStatus((int)HttpStatusCode.NoContent);
+    }
 
 
     public Task PartiallyUpdateAsync(int id, JsonPatchDocument<UpdateAirportDto> jsonPatchDocument)
@@ -71,8 +88,4 @@ public class AirportService : IAirportService
         throw new NotImplementedException();
     }
 
-    public Task UpdateAsync(int id, UpdateAirportDto updateAirportDto)
-    {
-        throw new NotImplementedException();
-    }
 }

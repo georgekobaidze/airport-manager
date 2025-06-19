@@ -10,6 +10,6 @@ public interface IAirportService
     Task<Result<IEnumerable<AirportDto>>> GetAllAsync();
     Task<Result<AirportDto>> GetByPkAsync(int id);
     Task<Result<int>> CreateAsync(CreateAirportDto createAirportDto);
-    Task UpdateAsync(int id, UpdateAirportDto updateAirportDto);
+    Task<Result> UpdateAsync(int id, UpdateAirportDto updateAirportDto);
     Task PartiallyUpdateAsync(int id, JsonPatchDocument<UpdateAirportDto> jsonPatchDocument);
 }

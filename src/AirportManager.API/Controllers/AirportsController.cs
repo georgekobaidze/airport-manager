@@ -61,9 +61,9 @@ public class AirportsController : ControllerBase
     [HttpPut("{id}")]
     public async Task<ActionResult> UpdateAirport(int id, UpdateAirportDto updateAirportDto)
     {
-        await _airportService.UpdateAsync(id, updateAirportDto);
+        var result = await _airportService.UpdateAsync(id, updateAirportDto);
 
-        return NoContent();
+        return StatusCode(result.StatusCode, result.Message);
     }
 
     [HttpPatch("{id}")]
