@@ -26,7 +26,7 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : cla
         return await connection.QueryAsync<T>(query);
     }
 
-    public async Task<T?> GetByIdAsync(int id)
+    public async Task<T?> GetByPkAsync(int id)
     {
         var query = $"SELECT * FROM {_tableName} WHERE id = @id LIMIT 1";
 

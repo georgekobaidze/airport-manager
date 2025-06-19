@@ -28,7 +28,7 @@ public class AirportsController : ControllerBase
     [HttpGet("{id}", Name = "GetAirport")]
     public async Task<ActionResult<AirportDto>> GetAirport(int id)
     {
-        var airportResult = await _airportService.GetByIdAsync(id);
+        var airportResult = await _airportService.GetByPkAsync(id);
 
         if (!airportResult.Success)
             return StatusCode(airportResult.StatusCode, airportResult.Message);

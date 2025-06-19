@@ -30,9 +30,9 @@ public class AirportService : IAirportService
         return Result<IEnumerable<AirportDto>>.Ok(airports);
     }
 
-    public async Task<Result<AirportDto>> GetByIdAsync(int id)
+    public async Task<Result<AirportDto>> GetByPkAsync(int id)
     {
-        var airportFromDb = await _airportRepository.GetByIdAsync(id);
+        var airportFromDb = await _airportRepository.GetByPkAsync(id);
 
         if (airportFromDb == null)
             return Result<AirportDto>.FailNotFound();
