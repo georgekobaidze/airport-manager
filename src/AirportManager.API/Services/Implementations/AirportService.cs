@@ -5,6 +5,7 @@ using AirportManager.API.Repositories.Interfaces;
 using AirportManager.API.Services.Interfaces;
 using AirportManager.API.Shared;
 using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.JsonPatch.Exceptions;
 
 namespace AirportManager.API.Services.Implementations;
 
@@ -83,9 +84,37 @@ public class AirportService : IAirportService
     }
 
 
-    public Task PartiallyUpdateAsync(int id, JsonPatchDocument<UpdateAirportDto> jsonPatchDocument)
+    public async Task<Result> PartiallyUpdateAsync(int id, JsonPatchDocument<UpdateAirportDto> jsonPatchDocument)
     {
-        throw new NotImplementedException();
-    }
+        var airportEntity = await _airportRepository.GetByPkAsync(id);
 
+        if (airportEntity == null)
+            return Result.FailNotFound();
+
+        var airportToPatch = new UpdateAirportDto
+        {
+            Name = airportEntity.Name,
+            CountryId = airportEntity.CountryId,
+            Description = airportEntity.Description
+        };
+
+        try
+        {
+            jsonPatchDocument.ApplyTo(airportToPatch);
+        }
+        catch (JsonPatchException ex)
+        {
+            return Result.Fail(ex.Message, (int)StatusCodes.Status400BadRequest);
+        }
+
+        // TODO: add validation when you add fluent validations.
+
+        airportEntity.Name = airportToPatch.Name;
+        airportEntity.CountryId = airportToPatch.CountryId;
+        airportEntity.Description = airportToPatch.Description;
+
+        await _airportRepository.UpdateAsync(airportEntity);
+
+        return Result.Ok().WithStatus((int)HttpStatusCode.NoContent);
+    }
 }

@@ -69,31 +69,8 @@ public class AirportsController : ControllerBase
     [HttpPatch("{id}")]
     public async Task<IActionResult> PartiallyUpdateAirport(int id, JsonPatchDocument<UpdateAirportDto> jsonPatchDocument)
     {
-        // var airportFromStore = DummyDataProvider.GetAirports().FirstOrDefault(x => x.Id == id);
-        // if (airportFromStore == null)
-        //     return NotFound();
+        var result = await _airportService.PartiallyUpdateAsync(id, jsonPatchDocument);
 
-        // var airportToPatch = new UpdateAirportDto
-        // {
-        //     Name = airportFromStore.Name,
-        //     CountryId = airportFromStore.CountryId
-        // };
-
-        // jsonPatchDocument.ApplyTo(airportToPatch, ModelState);
-
-        // if (!ModelState.IsValid)
-        //     return BadRequest(ModelState);
-
-        // if (!TryValidateModel(airportToPatch))
-        //     return BadRequest(ModelState);
-
-        // airportFromStore.CountryId = airportToPatch.CountryId;
-        // airportFromStore.Name = airportToPatch.Name;
-
-        // return NoContent();
-
-        await _airportService.PartiallyUpdateAsync(id, jsonPatchDocument);
-
-        return NoContent();
+        return StatusCode(result.StatusCode, result.Message);
     }
 }
