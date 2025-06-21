@@ -16,7 +16,10 @@ public class AirportsController : ControllerBase
         _airportService = airportService;
     }
 
-
+    /// <summary>
+    /// Gets all airports without a filter
+    /// </summary>
+    /// <returns>Airports with a status code</returns>
     [HttpGet]
     public async Task<ActionResult<ICollection<AirportDto>>> GetAirports()
     {
@@ -25,6 +28,11 @@ public class AirportsController : ControllerBase
         return Ok(airports);
     }
 
+    /// <summary>
+    /// Gets an airport by id
+    /// </summary>
+    /// <param name="id">Airport identifier</param>
+    /// <returns>An airport with a status code</returns>
     [HttpGet("{id}", Name = "GetAirport")]
     public async Task<ActionResult<AirportDto>> GetAirport(int id)
     {
@@ -36,6 +44,11 @@ public class AirportsController : ControllerBase
         return Ok(airportResult.Data);
     }
 
+    /// <summary>
+    /// Creates a new airport
+    /// </summary>
+    /// <param name="createAirportDto">DTO for creating a new airport</param>
+    /// <returns>Status code with message</returns>
     [HttpPost]
     public async Task<ActionResult> CreateAirport(CreateAirportDto createAirportDto)
     {
@@ -58,6 +71,12 @@ public class AirportsController : ControllerBase
         return StatusCode(StatusCodes.Status500InternalServerError, insertionResult.Message);
     }
 
+    /// <summary>
+    /// Updates an airport by id
+    /// </summary>
+    /// <param name="id">Airport identifier</param>
+    /// <param name="updateAirportDto">DTO for updating an airport</param>
+    /// <returns>Status code with message</returns>
     [HttpPut("{id}")]
     public async Task<ActionResult> UpdateAirport(int id, UpdateAirportDto updateAirportDto)
     {
@@ -66,6 +85,12 @@ public class AirportsController : ControllerBase
         return StatusCode(result.StatusCode, result.Message);
     }
 
+    /// <summary>
+    /// Partially updates an airport by id
+    /// </summary>
+    /// <param name="id">Airport identifier</param>
+    /// <param name="jsonPatchDocument">JSON patch document</param>
+    /// <returns>Status code with message</returns>
     [HttpPatch("{id}")]
     public async Task<IActionResult> PartiallyUpdateAirport(int id, JsonPatchDocument<UpdateAirportDto> jsonPatchDocument)
     {
