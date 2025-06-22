@@ -6,5 +6,5 @@ public class CountryDto
     public string Name { get; set; }
     public int NumberOfAirports { get; set; }
     
-    public ICollection<AirportDto> TopAirports { get; set; }
+    public IEnumerable<AirportDto> TopAirports { get; set; }
 }
