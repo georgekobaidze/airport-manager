@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using AirportManager.API.DTOs;
 using AirportManager.API.Services.Interfaces;
 using Microsoft.AspNetCore.JsonPatch;
@@ -50,8 +49,7 @@ public class CountriesController : ControllerBase
                 new CountryDto
                 {
                     Id = countryId,
-                    Name = country.Name,
-                    NumberOfAirports = country.NumberOfAirports
+                    Name = country.Name
                 });
         }
 
