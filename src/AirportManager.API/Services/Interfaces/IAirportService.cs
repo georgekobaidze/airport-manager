@@ -1,5 +1,4 @@
 using AirportManager.API.DTOs;
-using AirportManager.API.Entities;
 using AirportManager.API.Shared;
 using Microsoft.AspNetCore.JsonPatch;
 

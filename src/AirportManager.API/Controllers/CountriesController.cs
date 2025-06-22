@@ -27,7 +27,7 @@ public class CountriesController : ControllerBase
     [HttpGet("{id}", Name = "GetCountry")]
     public ActionResult<CountryDto> GetCountry(int id)
     {
-        var country = _countryService.GetByIdAsync(id);
+        var country = _countryService.GetByPkAsync(id);
 
         if (country == null)
             return NotFound();
@@ -40,16 +40,16 @@ public class CountriesController : ControllerBase
     {
         var countryId = await _countryService.CreateAsync(country);
 
-        if (countryId != -1)
-            return CreatedAtRoute(
-                "GetCountry",
-                new { id = countryId },
-                new CountryDto
-                {
-                    Id = countryId,
-                    Name = country.Name,
-                    NumberOfAirports = country.NumberOfAirports
-                });
+        // if (countryId != -1)
+        //     return CreatedAtRoute(
+        //         "GetCountry",
+        //         new { id = countryId },
+        //         new CountryDto
+        //         {
+        //             Id = countryId,
+        //             Name = country.Name,
+        //             NumberOfAirports = country.NumberOfAirports
+        //         });
 
         return StatusCode(StatusCodes.Status500InternalServerError);
     }
