@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using AirportManager.API.DTOs;
 using AirportManager.API.Services.Interfaces;
 using Microsoft.AspNetCore.JsonPatch;
@@ -25,70 +26,51 @@ public class CountriesController : ControllerBase
     }
 
     [HttpGet("{id}", Name = "GetCountry")]
-    public ActionResult<CountryDto> GetCountry(int id)
+    public async Task<ActionResult<CountryDto>> GetCountry(int id)
     {
-        var country = _countryService.GetByPkAsync(id);
+        var countryResult = await _countryService.GetByPkAsync(id);
 
-        if (country == null)
-            return NotFound();
+        if (!countryResult.Success)
+            return StatusCode(countryResult.StatusCode, countryResult.Message);
 
-        return Ok(country);
+        return Ok(countryResult.Data);
     }
 
     [HttpPost]
     public async Task<ActionResult> CreateCountry(CreateCountryDto country)
     {
-        var countryId = await _countryService.CreateAsync(country);
+        var insertionResult = await _countryService.CreateAsync(country);
+        if (insertionResult.Success)
+        {
+            var countryId = insertionResult.Data;
 
-        // if (countryId != -1)
-        //     return CreatedAtRoute(
-        //         "GetCountry",
-        //         new { id = countryId },
-        //         new CountryDto
-        //         {
-        //             Id = countryId,
-        //             Name = country.Name,
-        //             NumberOfAirports = country.NumberOfAirports
-        //         });
+            return CreatedAtRoute(
+                "GetCountry",
+                new { id = countryId },
+                new CountryDto
+                {
+                    Id = countryId,
+                    Name = country.Name,
+                    NumberOfAirports = country.NumberOfAirports
+                });
+        }
 
-        return StatusCode(StatusCodes.Status500InternalServerError);
+        return StatusCode(StatusCodes.Status500InternalServerError, insertionResult.Message);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateCountry(int id, UpdateCountryDto country)
+    public async Task<IActionResult> UpdateCountry(int id, UpdateCountryDto countryDto)
     {
-        await _countryService.UpdateAsync(id, country);
+        var result = await _countryService.UpdateAsync(id, countryDto);
 
-        return NoContent();
+        return StatusCode(result.StatusCode, result.Message);
     }
 
     [HttpPatch("{id}")]
     public async Task<IActionResult> PartiallyUpdateCountry(int id, JsonPatchDocument<UpdateCountryDto> jsonPatchDocument)
     {
-        // var countryFromStore = DummyDataProvider.GetCountries().FirstOrDefault(x => x.Id == id);
-        // if (countryFromStore == null)
-        //     return NotFound();
+        var result = await _countryService.PartiallyUpdateAsync(id, jsonPatchDocument);
 
-        // var countryToPatch = new UpdateCountryDto
-        // {
-        //     Name = countryFromStore.Name,
-        //     NumberOfAirports = countryFromStore.NumberOfAirports
-        // };
-
-        // jsonPatchDocument.ApplyTo(countryToPatch, ModelState);
-
-        // if (!ModelState.IsValid)
-        //     return BadRequest(ModelState);
-
-        // if (!TryValidateModel(countryToPatch))
-        //     return BadRequest(ModelState);
-
-        // countryFromStore.Name = countryToPatch.Name;
-        // countryFromStore.NumberOfAirports = countryToPatch.NumberOfAirports;
-
-        // return NoContent();
-
-        await _countryService.PartiallyUpdateAsync(id, jsonPatchDocument);
-        return NoContent();
+        return StatusCode(result.StatusCode, result.Message);
     }
 }
