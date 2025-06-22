@@ -117,4 +117,13 @@ public class AirportService : IAirportService
 
         return Result.Ok().WithStatus((int)HttpStatusCode.NoContent);
     }
+
+    public async Task<Result> DeleteAsync(int id)
+    {
+        var deleteResult = await _airportRepository.DeleteAsync(id);
+        if (deleteResult < 1)
+            return Result.FailNotFound();
+
+        return Result.Ok().WithStatus((int)HttpStatusCode.NoContent);
+    }
 }

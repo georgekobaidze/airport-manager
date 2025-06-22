@@ -11,4 +11,5 @@ public interface IAirportService
     Task<Result<int>> CreateAsync(CreateAirportDto createAirportDto);
     Task<Result> UpdateAsync(int id, UpdateAirportDto updateAirportDto);
     Task<Result> PartiallyUpdateAsync(int id, JsonPatchDocument<UpdateAirportDto> jsonPatchDocument);
+    Task<Result> DeleteAsync(int id);
 }

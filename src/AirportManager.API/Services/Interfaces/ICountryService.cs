@@ -11,4 +11,5 @@ public interface ICountryService
     Task<Result<int>> CreateAsync(CreateCountryDto createCountryDto);
     Task<Result> UpdateAsync(int id, UpdateCountryDto updateCountryDto);
     Task<Result> PartiallyUpdateAsync(int id, JsonPatchDocument<UpdateCountryDto> jsonPatchDocument);
+    Task<Result> DeleteAsync(int id);
 }

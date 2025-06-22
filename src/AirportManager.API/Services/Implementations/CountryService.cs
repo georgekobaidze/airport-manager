@@ -121,4 +121,9 @@ public class CountryService : ICountryService
 
         return Result.Ok().WithStatus((int)HttpStatusCode.NoContent);
     }
+
+    public async Task<Result> DeleteAsync(int id)
+    {
+        throw new NotImplementedException();
+    }
 }

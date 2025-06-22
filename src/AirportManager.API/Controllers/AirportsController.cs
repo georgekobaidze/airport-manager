@@ -98,4 +98,17 @@ public class AirportsController : ControllerBase
 
         return StatusCode(result.StatusCode, result.Message);
     }
+
+    /// <summary>
+    /// Deletes an airport by id
+    /// </summary>
+    /// <param name="id">Airport identifier</param>
+    /// <returns>Status code with message</returns>
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteAirport(int id)
+    {
+        var result = await _airportService.DeleteAsync(id);
+
+        return StatusCode(result.StatusCode, result.Message);
+    }
 }
