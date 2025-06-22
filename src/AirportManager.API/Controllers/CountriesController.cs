@@ -71,4 +71,17 @@ public class CountriesController : ControllerBase
 
         return StatusCode(result.StatusCode, result.Message);
     }
+
+    /// <summary>
+    /// Deletes a country by id
+    /// </summary>
+    /// <param name="id">Country identifier</param>
+    /// <returns>Status code with message</returns>
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteCountry(int id)
+    {
+        var result = await _countryService.DeleteAsync(id);
+
+        return StatusCode(result.StatusCode, result.Message);
+    }
 }

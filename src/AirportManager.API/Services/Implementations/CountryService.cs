@@ -124,6 +124,10 @@ public class CountryService : ICountryService
 
     public async Task<Result> DeleteAsync(int id)
     {
-        throw new NotImplementedException();
+        var deleteResult = await _countryRepository.DeleteAsync(id);
+        if (deleteResult < 1)
+            return Result.FailNotFound();
+
+        return Result.Ok().WithStatus((int)HttpStatusCode.NoContent);
     }
 }
