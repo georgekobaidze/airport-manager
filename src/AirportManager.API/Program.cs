@@ -1,3 +1,4 @@
+using System.Reflection;
 using AirportManager.API.DbConnectionFactory.Implementations;
 using AirportManager.API.DbConnectionFactory.Interfaces;
 using AirportManager.API.DbContexts;
@@ -16,7 +17,12 @@ builder.Services.AddControllers().AddNewtonsoftJson();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
+});
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
