@@ -1,3 +1,4 @@
+using AirportManager.API.Common;
 using AirportManager.API.DTOs;
 using AirportManager.API.Services.Interfaces;
 using Microsoft.AspNetCore.JsonPatch;
@@ -17,9 +18,9 @@ public class CountriesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<CountryDto>>> GetCountries()
+    public async Task<ActionResult<IEnumerable<CountryDto>>> GetCountries([FromQuery] PagingOptions pagingOptions)
     {
-        var countries = await _countryService.GetAllAsync();
+        var countries = await _countryService.GetAllAsync(pagingOptions);
 
         return Ok(countries);
     }

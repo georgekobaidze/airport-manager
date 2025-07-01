@@ -1,4 +1,5 @@
 using System.Net;
+using AirportManager.API.Common;
 using AirportManager.API.DTOs;
 using AirportManager.API.Entities;
 using AirportManager.API.Repositories.Interfaces;
@@ -17,9 +18,9 @@ public class CountryService : ICountryService
         _countryRepository = countryRepository;
     }
 
-    public async Task<Result<IEnumerable<CountryDto>>> GetAllAsync()
+    public async Task<Result<IEnumerable<CountryDto>>> GetAllAsync(PagingOptions pagingOptions)
     {
-        var countriesFromDb = await _countryRepository.GetAllAsync();
+        var countriesFromDb = await _countryRepository.GetAllAsync(pagingOptions);
 
         var countries = countriesFromDb.Select(country => new CountryDto
         {

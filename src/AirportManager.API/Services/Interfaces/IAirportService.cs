@@ -1,3 +1,4 @@
+using AirportManager.API.Common;
 using AirportManager.API.DTOs;
 using AirportManager.API.Shared;
 using Microsoft.AspNetCore.JsonPatch;
@@ -6,7 +7,7 @@ namespace AirportManager.API.Services.Interfaces;
 
 public interface IAirportService
 {
-    Task<Result<IEnumerable<AirportDto>>> GetAllAsync();
+    Task<Result<IEnumerable<AirportDto>>> GetAllAsync(PagingOptions pagingOptions);
     Task<Result<AirportDto>> GetByPkAsync(int id);
     Task<Result<int>> CreateAsync(CreateAirportDto createAirportDto);
     Task<Result> UpdateAsync(int id, UpdateAirportDto updateAirportDto);

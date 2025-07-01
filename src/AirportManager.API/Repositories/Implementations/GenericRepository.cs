@@ -1,9 +1,9 @@
 using System.Text;
+using AirportManager.API.Common;
 using AirportManager.API.DbConnectionFactory.Interfaces;
 using AirportManager.API.Helpers;
 using AirportManager.API.Repositories.Interfaces;
 using Dapper;
-using SQLitePCL;
 
 namespace AirportManager.API.Repositories.Implementations;
 
@@ -18,13 +18,21 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : cla
         DefaultTypeMap.MatchNamesWithUnderscores = true;
     }
 
-    public async Task<IEnumerable<T>> GetAllAsync()
+    public async Task<IEnumerable<T>> GetAllAsync(PagingOptions pagingOptions)
     {
-        var query = $"SELECT * FROM {_tableName}";
+        var query = new StringBuilder($"SELECT * FROM {_tableName}");
+
+        if (pagingOptions != null)
+        {
+            if (pagingOptions.OrderBy != null)
+                query.Append($" ORDER BY {pagingOptions.OrderBy.PascalCaseToSnakeCase()}");
+
+            query.Append($" LIMIT {pagingOptions.PageSize} OFFSET {(pagingOptions.Page - 1) * pagingOptions.PageSize}");
+        }
 
         var connection = _factory.CreateConnection();
 
-        return await connection.QueryAsync<T>(query);
+        return await connection.QueryAsync<T>(query.ToString());
     }
 
     public async Task<T?> GetByPkAsync(int id)

@@ -1,4 +1,5 @@
 using System.Net;
+using AirportManager.API.Common;
 using AirportManager.API.DTOs;
 using AirportManager.API.Entities;
 using AirportManager.API.Repositories.Interfaces;
@@ -18,9 +19,9 @@ public class AirportService : IAirportService
         _airportRepository = airportRepository;
     }
 
-    public async Task<Result<IEnumerable<AirportDto>>> GetAllAsync()
+    public async Task<Result<IEnumerable<AirportDto>>> GetAllAsync(PagingOptions pagingOptions)
     {
-        var airportsFromDb = await _airportRepository.GetAllAsync();
+        var airportsFromDb = await _airportRepository.GetAllAsync(pagingOptions);
 
         var airports = airportsFromDb.Select(airport => new AirportDto
         {

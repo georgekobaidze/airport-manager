@@ -1,3 +1,4 @@
+using AirportManager.API.Common;
 using AirportManager.API.DTOs;
 using AirportManager.API.Services.Interfaces;
 using Microsoft.AspNetCore.JsonPatch;
@@ -21,9 +22,9 @@ public class AirportsController : ControllerBase
     /// </summary>
     /// <returns>Airports with a status code</returns>
     [HttpGet]
-    public async Task<ActionResult<ICollection<AirportDto>>> GetAirports()
+    public async Task<ActionResult<ICollection<AirportDto>>> GetAirports([FromQuery] PagingOptions pagingOptions)
     {
-        var airports = await _airportService.GetAllAsync();
+        var airports = await _airportService.GetAllAsync(pagingOptions);
 
         return Ok(airports);
     }
