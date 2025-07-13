@@ -50,7 +50,7 @@ public class Result
 
 public class Result<T> : Result
 {
-    public T? Data { get; private set; }
+    public T? Data { get; protected set; }
 
     public static Result<T> Ok(T data)
     {
@@ -92,5 +92,21 @@ public class Result<T> : Result
     {
         Message = message;
         return this;
+    }
+}
+
+public class PaginatedResult<T> : Result<T>
+{
+    public PaginationMetadata PaginationMetadata { get; private set; }
+
+    public new static PaginatedResult<T> Ok(T data, PaginationMetadata paginationMetadata)
+    {
+        return new PaginatedResult<T>
+        {
+            Success = true,
+            StatusCode = StatusCodes.Status200OK,
+            Data = data,
+            PaginationMetadata = paginationMetadata
+        };
     }
 }
