@@ -26,8 +26,8 @@ public class PaginationMetadata
     {
         TotalItems = totalItems;
         PageSize = pageSize;
-        CurrentPage = currentPage;
         TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+        CurrentPage = currentPage > TotalPages ? TotalPages : currentPage;
         HasPrevious = currentPage > 1;
         HasNext = currentPage < TotalPages;
     }

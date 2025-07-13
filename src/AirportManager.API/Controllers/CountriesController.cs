@@ -3,6 +3,7 @@ using AirportManager.API.DTOs;
 using AirportManager.API.Services.Interfaces;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace AirportManager.API.Controllers;
 
@@ -20,9 +21,11 @@ public class CountriesController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<CountryDto>>> GetCountries([FromQuery] PagingOptions pagingOptions)
     {
-        var countries = await _countryService.GetAllAsync(pagingOptions);
+        var countriesPaginationResult = await _countryService.GetAllAsync(pagingOptions);
 
-        return Ok(countries);
+        Response.Headers.Append("x-pagination", JsonConvert.SerializeObject(countriesPaginationResult.PaginationMetadata));
+
+        return Ok(countriesPaginationResult.Data);
     }
 
     [HttpGet("{id}", Name = "GetCountry")]

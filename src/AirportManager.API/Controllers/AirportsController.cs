@@ -27,7 +27,7 @@ public class AirportsController : ControllerBase
     {
         var airportsPaginatedResult = await _airportService.GetAllAsync(pagingOptions);
 
-        Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(airportsPaginatedResult.PaginationMetadata));
+        Response.Headers.Append("x-pagination", JsonConvert.SerializeObject(airportsPaginatedResult.PaginationMetadata));
 
         return Ok(airportsPaginatedResult.Data);
     }

@@ -18,7 +18,7 @@ public class CountryService : ICountryService
         _countryRepository = countryRepository;
     }
 
-    public async Task<Result<IEnumerable<CountryDto>>> GetAllAsync(PagingOptions pagingOptions)
+    public async Task<PaginatedResult<IEnumerable<CountryDto>>> GetAllAsync(PagingOptions pagingOptions)
     {
         var countriesFromDb = await _countryRepository.GetAllAsync(pagingOptions);
 
@@ -36,7 +36,9 @@ public class CountryService : ICountryService
             })
         });
 
-        return Result<IEnumerable<CountryDto>>.Ok(countries);
+        return PaginatedResult<IEnumerable<CountryDto>>.Ok(
+            countries,
+            new PaginationMetadata(countriesFromDb.Item2, pagingOptions.PageSize, pagingOptions.Page));
     }
 
     public async Task<Result<CountryDto>> GetByPkAsync(int id)
