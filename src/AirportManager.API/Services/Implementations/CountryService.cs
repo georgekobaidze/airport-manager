@@ -22,7 +22,7 @@ public class CountryService : ICountryService
     {
         var countriesFromDb = await _countryRepository.GetAllAsync(pagingOptions);
 
-        var countries = countriesFromDb.Select(country => new CountryDto
+        var countries = countriesFromDb.Item1.Select(country => new CountryDto
         {
             Id = country.Id,
             Name = country.Name,

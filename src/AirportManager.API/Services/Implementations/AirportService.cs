@@ -19,18 +19,20 @@ public class AirportService : IAirportService
         _airportRepository = airportRepository;
     }
 
-    public async Task<Result<IEnumerable<AirportDto>>> GetAllAsync(PagingOptions pagingOptions)
+    public async Task<PaginatedResult<IEnumerable<AirportDto>>> GetAllAsync(PagingOptions pagingOptions)
     {
         var airportsFromDb = await _airportRepository.GetAllAsync(pagingOptions);
 
-        var airports = airportsFromDb.Select(airport => new AirportDto
+        var airports = airportsFromDb.Item1.Select(airport => new AirportDto
         {
             Id = airport.Id,
             Name = airport.Name,
             CountryId = airport.CountryId
         });
 
-        return Result<IEnumerable<AirportDto>>.Ok(airports);
+        return PaginatedResult<IEnumerable<AirportDto>>.Ok(
+            airports,
+            new PaginationMetadata(airportsFromDb.Item2, pagingOptions.PageSize, pagingOptions.Page));
     }
 
     public async Task<Result<AirportDto>> GetByPkAsync(int id)

@@ -18,7 +18,7 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : cla
         DefaultTypeMap.MatchNamesWithUnderscores = true;
     }
 
-    public async Task<IEnumerable<T>> GetAllAsync(PagingOptions pagingOptions)
+    public async Task<(IEnumerable<T>, int)> GetAllAsync(PagingOptions pagingOptions)
     {
         var query = new StringBuilder($"SELECT * FROM {_tableName}");
 
@@ -30,9 +30,13 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : cla
             query.Append($" LIMIT {pagingOptions.PageSize} OFFSET {(pagingOptions.Page - 1) * pagingOptions.PageSize}");
         }
 
+        var countAllQuery = $"SELECT COUNT(*) FROM {_tableName}";
+
         var connection = _factory.CreateConnection();
 
-        return await connection.QueryAsync<T>(query.ToString());
+        var totalCount = await connection.ExecuteScalarAsync<int>(countAllQuery);
+        var data = await connection.QueryAsync<T>(query.ToString());
+        return (data, totalCount);
     }
 
     public async Task<T?> GetByPkAsync(int id)

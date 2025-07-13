@@ -109,4 +109,36 @@ public class PaginatedResult<T> : Result<T>
             PaginationMetadata = paginationMetadata
         };
     }
+
+    public static new PaginatedResult<T> Fail(string message, int statusCode = StatusCodes.Status500InternalServerError)
+    {
+        return new PaginatedResult<T>
+        {
+            Success = false,
+            StatusCode = statusCode,
+            Message = message
+        };
+    }
+
+    public static new PaginatedResult<T> FailNotFound()
+    {
+        return new PaginatedResult<T>
+        {
+            Success = false,
+            StatusCode = StatusCodes.Status404NotFound,
+            Message = "Resource not found"
+        };
+    }
+
+    public new PaginatedResult<T> WithStatus(int statusCode)
+    {
+        StatusCode = statusCode;
+        return this;
+    }
+
+    public new PaginatedResult<T> WithMessage(string message)
+    {
+        Message = message;
+        return this;
+    }
 }
