@@ -28,6 +28,16 @@ public class CountriesController : ControllerBase
         return Ok(countriesPaginationResult.Data);
     }
 
+    [HttpHead]
+    public async Task<IActionResult> HeadCountries([FromQuery] PagingOptions pagingOptions)
+    {
+        var countriesPaginationResult = await _countryService.GetAllAsync(pagingOptions);
+
+        Response.Headers.Append("x-pagination", JsonConvert.SerializeObject(countriesPaginationResult.PaginationMetadata));
+
+        return Ok();
+    }
+
     [HttpGet("{id}", Name = "GetCountry")]
     public async Task<ActionResult<CountryDto>> GetCountry(int id)
     {

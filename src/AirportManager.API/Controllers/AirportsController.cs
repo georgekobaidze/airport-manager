@@ -32,6 +32,16 @@ public class AirportsController : ControllerBase
         return Ok(airportsPaginatedResult.Data);
     }
 
+    [HttpHead]
+    public async Task<ActionResult<ICollection<AirportDto>>> HeadAirports([FromQuery] PagingOptions pagingOptions)
+    {
+        var airportsPaginatedResult = await _airportService.GetAllAsync(pagingOptions);
+
+        Response.Headers.Append("x-pagination", JsonConvert.SerializeObject(airportsPaginatedResult.PaginationMetadata));
+
+        return Ok();
+    }
+
     /// <summary>
     /// Gets an airport by id
     /// </summary>
