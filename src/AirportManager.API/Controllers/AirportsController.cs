@@ -125,4 +125,18 @@ public class AirportsController : ControllerBase
 
         return StatusCode(result.StatusCode, result.Message);
     }
+
+    [HttpOptions]
+    public IActionResult GetAirportsOptions()
+    {
+        Response.Headers.Append("Allow", "GET,POST,HEAD,OPTIONS");
+        return Ok();
+    }
+
+    [HttpOptions("{id}")]
+    public IActionResult GetAirportOptions()
+    {
+        Response.Headers.Append("Allow", "GET,PUT,PATCH,DELETE,HEAD,OPTIONS");
+        return Ok();
+    }
 }

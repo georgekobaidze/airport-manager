@@ -98,4 +98,19 @@ public class CountriesController : ControllerBase
 
         return StatusCode(result.StatusCode, result.Message);
     }
+
+    [HttpOptions]
+    public IActionResult GetCountriesOptions()
+    {
+        Response.Headers.Append("Allow", "GET,POST,HEAD,OPTIONS");
+        return Ok();
+    }
+
+    [HttpOptions("{id}")]
+    public IActionResult GetCountryOptions()
+    {
+        // For a single country, allow GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+        Response.Headers.Append("Allow", "GET,PUT,PATCH,DELETE,HEAD,OPTIONS");
+        return Ok();
+    }
 }
