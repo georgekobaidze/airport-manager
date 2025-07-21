@@ -1,6 +1,7 @@
 using AirportManager.API.Common;
 using AirportManager.API.DTOs;
 using AirportManager.API.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -8,6 +9,7 @@ using Newtonsoft.Json;
 namespace AirportManager.API.Controllers;
 
 [Route("api/countries")]
+[Authorize]
 [ApiController]
 public class CountriesController : ControllerBase
 {
