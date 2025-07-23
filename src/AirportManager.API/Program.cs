@@ -8,6 +8,7 @@ using AirportManager.API.Repositories.Interfaces;
 using AirportManager.API.Services.Implementations;
 using AirportManager.API.Services.Interfaces;
 using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -19,12 +20,7 @@ builder.Services.AddControllers().AddNewtonsoftJson();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 
-builder.Services.AddSwaggerGen(c =>
-{
-    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    c.IncludeXmlComments(xmlPath);
-});
+builder.Services.AddEndpointsApiExplorer();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -60,7 +56,30 @@ builder.Services.AddApiVersioning(setupAction =>
     setupAction.ReportApiVersions = true;
     setupAction.AssumeDefaultVersionWhenUnspecified = true;
     setupAction.DefaultApiVersion = new ApiVersion(1, 0);
-}).AddMvc();
+}).AddMvc().AddApiExplorer(options =>
+{
+    options.SubstituteApiVersionInUrl = true;
+});
+
+var apiVersionDescriptionProvider = builder.Services.BuildServiceProvider()
+    .GetRequiredService<IApiVersionDescriptionProvider>();
+
+builder.Services.AddSwaggerGen(c =>
+{
+    foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions)
+    {
+        c.SwaggerDoc($"{description.GroupName}", new()
+        {
+            Title = "Airport Manager API",
+            Version = description.ApiVersion.ToString(),
+            Description = "Airport manager API"
+        });
+    }
+
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
+});
 
 var app = builder.Build();
 
@@ -68,7 +87,14 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        var descriptions = app.DescribeApiVersions();
+        foreach (var description in descriptions)
+        {
+            options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
+        }
+    });
 }
 
 app.UseHttpsRedirection();

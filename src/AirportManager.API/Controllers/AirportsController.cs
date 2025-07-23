@@ -10,9 +10,10 @@ using Newtonsoft.Json;
 namespace AirportManager.API.Controllers;
 
 [ApiController]
-//[Authorize]
+[Authorize]
 [Route("api/v{version:apiVersion}/airports")]
-[ApiVersion(1.0)]
+[ApiVersion(1)]
+[ApiVersion(2)]
 public class AirportsController : ControllerBase
 {
     private readonly IAirportService _airportService;
