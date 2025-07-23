@@ -1,6 +1,7 @@
 using AirportManager.API.Common;
 using AirportManager.API.DTOs;
 using AirportManager.API.Services.Interfaces;
+using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -8,9 +9,10 @@ using Newtonsoft.Json;
 
 namespace AirportManager.API.Controllers;
 
-[Route("api/countries")]
-[Authorize]
+[Route("api/v{version:apiVersion}/countries")]
+//[Authorize]
 [ApiController]
+[ApiVersion(1.0)]
 public class CountriesController : ControllerBase
 {
     private readonly ICountryService _countryService;

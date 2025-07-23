@@ -7,6 +7,7 @@ using AirportManager.API.Repositories.Implementations;
 using AirportManager.API.Repositories.Interfaces;
 using AirportManager.API.Services.Implementations;
 using AirportManager.API.Services.Interfaces;
+using Asp.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -53,6 +54,13 @@ builder.Services.AddAuthentication("Bearer")
             IssuerSigningKey = new SymmetricSecurityKey(Convert.FromBase64String(builder.Configuration["Authentication:Secret"]))
         };
     });
+
+builder.Services.AddApiVersioning(setupAction =>
+{
+    setupAction.ReportApiVersions = true;
+    setupAction.AssumeDefaultVersionWhenUnspecified = true;
+    setupAction.DefaultApiVersion = new ApiVersion(1, 0);
+}).AddMvc();
 
 var app = builder.Build();
 
