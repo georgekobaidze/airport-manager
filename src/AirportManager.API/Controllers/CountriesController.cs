@@ -1,5 +1,6 @@
 using AirportManager.API.Common;
-using AirportManager.API.DTOs;
+using AirportManager.API.Dtos.Countries.Requests;
+using AirportManager.API.Dtos.Countries.Responses;
 using AirportManager.API.Services.Interfaces;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
@@ -23,7 +24,7 @@ public class CountriesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<CountryDto>>> GetCountries([FromQuery] PagingOptions pagingOptions)
+    public async Task<ActionResult<IEnumerable<CountryResponse>>> GetCountries([FromQuery] PagingOptions pagingOptions)
     {
         var countriesPaginationResult = await _countryService.GetAllAsync(pagingOptions);
 
@@ -43,7 +44,7 @@ public class CountriesController : ControllerBase
     }
 
     [HttpGet("{id}", Name = "GetCountry")]
-    public async Task<ActionResult<CountryDto>> GetCountry(int id)
+    public async Task<ActionResult<CountryResponse>> GetCountry(int id)
     {
         var countryResult = await _countryService.GetByPkAsync(id);
 
@@ -54,7 +55,7 @@ public class CountriesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult> CreateCountry(CreateCountryDto country)
+    public async Task<ActionResult> CreateCountry(CreateCountryRequest country)
     {
         var insertionResult = await _countryService.CreateAsync(country);
         if (insertionResult.Success)
@@ -64,7 +65,7 @@ public class CountriesController : ControllerBase
             return CreatedAtRoute(
                 "GetCountry",
                 new { id = countryId },
-                new CountryDto
+                new CountryResponse
                 {
                     Id = countryId,
                     Name = country.Name
@@ -75,15 +76,15 @@ public class CountriesController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateCountry(int id, UpdateCountryDto countryDto)
+    public async Task<IActionResult> UpdateCountry(int id, UpdateCountryRequest country)
     {
-        var result = await _countryService.UpdateAsync(id, countryDto);
+        var result = await _countryService.UpdateAsync(id, country);
 
         return StatusCode(result.StatusCode, result.Message);
     }
 
     [HttpPatch("{id}")]
-    public async Task<IActionResult> PartiallyUpdateCountry(int id, JsonPatchDocument<UpdateCountryDto> jsonPatchDocument)
+    public async Task<IActionResult> PartiallyUpdateCountry(int id, JsonPatchDocument<UpdateCountryRequest> jsonPatchDocument)
     {
         var result = await _countryService.PartiallyUpdateAsync(id, jsonPatchDocument);
 

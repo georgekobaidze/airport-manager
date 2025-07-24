@@ -1,5 +1,6 @@
 using AirportManager.API.Common;
-using AirportManager.API.DTOs;
+using AirportManager.API.Dtos.Airports.Requests;
+using AirportManager.API.Dtos.Airports.Responses;
 using AirportManager.API.Services.Interfaces;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
@@ -27,7 +28,7 @@ public class AirportsController : ControllerBase
     /// </summary>
     /// <returns>Airports with a status code</returns>
     [HttpGet]
-    public async Task<ActionResult<ICollection<AirportDto>>> GetAirports([FromQuery] PagingOptions pagingOptions)
+    public async Task<ActionResult<ICollection<AirportResponse>>> GetAirports([FromQuery] PagingOptions pagingOptions)
     {
         var airportsPaginatedResult = await _airportService.GetAllAsync(pagingOptions);
 
@@ -37,7 +38,7 @@ public class AirportsController : ControllerBase
     }
 
     [HttpHead]
-    public async Task<ActionResult<ICollection<AirportDto>>> HeadAirports([FromQuery] PagingOptions pagingOptions)
+    public async Task<ActionResult<ICollection<AirportResponse>>> HeadAirports([FromQuery] PagingOptions pagingOptions)
     {
         var airportsPaginatedResult = await _airportService.GetAllAsync(pagingOptions);
 
@@ -52,7 +53,7 @@ public class AirportsController : ControllerBase
     /// <param name="id">Airport identifier</param>
     /// <returns>An airport with a status code</returns>
     [HttpGet("{id}", Name = "GetAirport")]
-    public async Task<ActionResult<AirportDto>> GetAirport(int id)
+    public async Task<ActionResult<AirportResponse>> GetAirport(int id)
     {
         var airportResult = await _airportService.GetByPkAsync(id);
 
@@ -65,12 +66,12 @@ public class AirportsController : ControllerBase
     /// <summary>
     /// Creates a new airport
     /// </summary>
-    /// <param name="createAirportDto">DTO for creating a new airport</param>
+    /// <param name="airport">DTO for creating a new airport</param>
     /// <returns>Status code with message</returns>
     [HttpPost]
-    public async Task<ActionResult> CreateAirport(CreateAirportDto createAirportDto)
+    public async Task<ActionResult> CreateAirport(CreateAirportRequest airport)
     {
-        var insertionResult = await _airportService.CreateAsync(createAirportDto);
+        var insertionResult = await _airportService.CreateAsync(airport);
         if (insertionResult.Success)
         {
             var airportId = insertionResult.Data;
@@ -78,11 +79,11 @@ public class AirportsController : ControllerBase
             return CreatedAtRoute(
                 "GetAirport",
                 new { id = airportId },
-                new AirportDto
+                new AirportResponse
                 {
                     Id = airportId,
-                    CountryId = createAirportDto.CountryId,
-                    Name = createAirportDto.Name
+                    CountryId = airport.CountryId,
+                    Name = airport.Name
                 });
         }
 
@@ -96,9 +97,9 @@ public class AirportsController : ControllerBase
     /// <param name="updateAirportDto">DTO for updating an airport</param>
     /// <returns>Status code with message</returns>
     [HttpPut("{id}")]
-    public async Task<ActionResult> UpdateAirport(int id, UpdateAirportDto updateAirportDto)
+    public async Task<ActionResult> UpdateAirport(int id, UpdateAirportRequest airport)
     {
-        var result = await _airportService.UpdateAsync(id, updateAirportDto);
+        var result = await _airportService.UpdateAsync(id, airport);
 
         return StatusCode(result.StatusCode, result.Message);
     }
@@ -110,7 +111,7 @@ public class AirportsController : ControllerBase
     /// <param name="jsonPatchDocument">JSON patch document</param>
     /// <returns>Status code with message</returns>
     [HttpPatch("{id}")]
-    public async Task<IActionResult> PartiallyUpdateAirport(int id, JsonPatchDocument<UpdateAirportDto> jsonPatchDocument)
+    public async Task<IActionResult> PartiallyUpdateAirport(int id, JsonPatchDocument<UpdateAirportRequest> jsonPatchDocument)
     {
         var result = await _airportService.PartiallyUpdateAsync(id, jsonPatchDocument);
 

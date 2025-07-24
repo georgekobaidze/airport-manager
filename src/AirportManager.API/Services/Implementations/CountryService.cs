@@ -1,6 +1,8 @@
 using System.Net;
 using AirportManager.API.Common;
-using AirportManager.API.DTOs;
+using AirportManager.API.Dtos.Airports.Responses;
+using AirportManager.API.Dtos.Countries.Requests;
+using AirportManager.API.Dtos.Countries.Responses;
 using AirportManager.API.Entities;
 using AirportManager.API.Repositories.Interfaces;
 using AirportManager.API.Services.Interfaces;
@@ -18,16 +20,16 @@ public class CountryService : ICountryService
         _countryRepository = countryRepository;
     }
 
-    public async Task<PaginatedResult<IEnumerable<CountryDto>>> GetAllAsync(PagingOptions pagingOptions)
+    public async Task<PaginatedResult<IEnumerable<CountryResponse>>> GetAllAsync(PagingOptions pagingOptions)
     {
         var countriesFromDb = await _countryRepository.GetAllAsync(pagingOptions);
 
-        var countries = countriesFromDb.Item1.Select(country => new CountryDto
+        var countries = countriesFromDb.Item1.Select(country => new CountryResponse
         {
             Id = country.Id,
             Name = country.Name,
             NumberOfAirports = country.Airports.Count,
-            TopAirports = country.Airports.Select(airport => new AirportDto
+            TopAirports = country.Airports.Select(airport => new AirportResponse
             {
                 Id = airport.Id,
                 CountryId = airport.CountryId,
@@ -36,24 +38,24 @@ public class CountryService : ICountryService
             })
         });
 
-        return PaginatedResult<IEnumerable<CountryDto>>.Ok(
+        return PaginatedResult<IEnumerable<CountryResponse>>.Ok(
             countries,
             new PaginationMetadata(countriesFromDb.Item2, pagingOptions.PageSize, pagingOptions.Page));
     }
 
-    public async Task<Result<CountryDto>> GetByPkAsync(int id)
+    public async Task<Result<CountryResponse>> GetByPkAsync(int id)
     {
         var countryFromDb = await _countryRepository.GetByPkAsync(id);
 
         if (countryFromDb == null)
-            return Result<CountryDto>.FailNotFound();
+            return Result<CountryResponse>.FailNotFound();
 
-        var country = new CountryDto
+        var country = new CountryResponse
         {
             Id = countryFromDb.Id,
             Name = countryFromDb.Name,
             NumberOfAirports = countryFromDb.Airports.Count,
-            TopAirports = countryFromDb.Airports.Select(airport => new AirportDto
+            TopAirports = countryFromDb.Airports.Select(airport => new AirportResponse
             {
                 Id = airport.Id,
                 CountryId = airport.CountryId,
@@ -62,10 +64,10 @@ public class CountryService : ICountryService
             })
         };
 
-        return Result<CountryDto>.Ok(country);
+        return Result<CountryResponse>.Ok(country);
     }
 
-    public async Task<Result<int>> CreateAsync(CreateCountryDto createCountryDto)
+    public async Task<Result<int>> CreateAsync(CreateCountryRequest createCountryDto)
     {
         var countryEntity = new Country
         {
@@ -80,7 +82,7 @@ public class CountryService : ICountryService
         return Result<int>.Ok(countryId);
     }
 
-    public async Task<Result> UpdateAsync(int id, UpdateCountryDto updateCountryDto)
+    public async Task<Result> UpdateAsync(int id, UpdateCountryRequest updateCountryDto)
     {
         var countryEntity = new Country
         {
@@ -95,14 +97,14 @@ public class CountryService : ICountryService
         return Result.Ok().WithStatus((int)HttpStatusCode.NoContent);
     }
 
-    public async Task<Result> PartiallyUpdateAsync(int id, JsonPatchDocument<UpdateCountryDto> jsonPatchDocument)
+    public async Task<Result> PartiallyUpdateAsync(int id, JsonPatchDocument<UpdateCountryRequest> jsonPatchDocument)
     {
         var countryEntity = await _countryRepository.GetByPkAsync(id);
 
         if (countryEntity == null)
             return Result.FailNotFound();
 
-        var countryToPatch = new UpdateCountryDto
+        var countryToPatch = new UpdateCountryRequest
         {
             Name = countryEntity.Name
         };

@@ -1,6 +1,7 @@
 using System.Net;
 using AirportManager.API.Common;
-using AirportManager.API.DTOs;
+using AirportManager.API.Dtos.Airports.Requests;
+using AirportManager.API.Dtos.Airports.Responses;
 using AirportManager.API.Entities;
 using AirportManager.API.Repositories.Interfaces;
 using AirportManager.API.Services.Interfaces;
@@ -19,40 +20,40 @@ public class AirportService : IAirportService
         _airportRepository = airportRepository;
     }
 
-    public async Task<PaginatedResult<IEnumerable<AirportDto>>> GetAllAsync(PagingOptions pagingOptions)
+    public async Task<PaginatedResult<IEnumerable<AirportResponse>>> GetAllAsync(PagingOptions pagingOptions)
     {
         var airportsFromDb = await _airportRepository.GetAllAsync(pagingOptions);
 
-        var airports = airportsFromDb.Item1.Select(airport => new AirportDto
+        var airports = airportsFromDb.Item1.Select(airport => new AirportResponse
         {
             Id = airport.Id,
             Name = airport.Name,
             CountryId = airport.CountryId
         });
 
-        return PaginatedResult<IEnumerable<AirportDto>>.Ok(
+        return PaginatedResult<IEnumerable<AirportResponse>>.Ok(
             airports,
             new PaginationMetadata(airportsFromDb.Item2, pagingOptions.PageSize, pagingOptions.Page));
     }
 
-    public async Task<Result<AirportDto>> GetByPkAsync(int id)
+    public async Task<Result<AirportResponse>> GetByPkAsync(int id)
     {
         var airportFromDb = await _airportRepository.GetByPkAsync(id);
 
         if (airportFromDb == null)
-            return Result<AirportDto>.FailNotFound();
+            return Result<AirportResponse>.FailNotFound();
 
-        var airport = new AirportDto
+        var airport = new AirportResponse
         {
             Id = airportFromDb.Id,
             Name = airportFromDb.Name,
             CountryId = airportFromDb.CountryId
         };
 
-        return Result<AirportDto>.Ok(airport);
+        return Result<AirportResponse>.Ok(airport);
     }
 
-    public async Task<Result<int>> CreateAsync(CreateAirportDto createAirportDto)
+    public async Task<Result<int>> CreateAsync(CreateAirportRequest createAirportDto)
     {
         var airportEntity = new Airport
         {
@@ -69,7 +70,7 @@ public class AirportService : IAirportService
         return Result<int>.Ok(airportId);
     }
 
-    public async Task<Result> UpdateAsync(int id, UpdateAirportDto updateAirportDto)
+    public async Task<Result> UpdateAsync(int id, UpdateAirportRequest updateAirportDto)
     {
         var airportEntity = new Airport
         {
@@ -87,14 +88,14 @@ public class AirportService : IAirportService
     }
 
 
-    public async Task<Result> PartiallyUpdateAsync(int id, JsonPatchDocument<UpdateAirportDto> jsonPatchDocument)
+    public async Task<Result> PartiallyUpdateAsync(int id, JsonPatchDocument<UpdateAirportRequest> jsonPatchDocument)
     {
         var airportEntity = await _airportRepository.GetByPkAsync(id);
 
         if (airportEntity == null)
             return Result.FailNotFound();
 
-        var airportToPatch = new UpdateAirportDto
+        var airportToPatch = new UpdateAirportRequest
         {
             Name = airportEntity.Name,
             CountryId = airportEntity.CountryId,

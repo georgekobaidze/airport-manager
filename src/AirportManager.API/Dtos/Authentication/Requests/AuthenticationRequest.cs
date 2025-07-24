@@ -1,4 +1,4 @@
-namespace AirportManager.API.DTOs;
+namespace AirportManager.API.Dtos.Authentication.Requests;
 
 public class AuthenticationRequest
 {

@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace AirportManager.API.DTOs;
+namespace AirportManager.API.Dtos.Airports.Requests;
 
-public class UpdateAirportDto
+public class UpdateAirportRequest
 {
     [Required]
     public string Name { get; set; }
